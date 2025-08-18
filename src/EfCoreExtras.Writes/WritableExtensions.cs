@@ -134,7 +134,17 @@ public static class WritableExtensions
     public static INestedUpdatingWritable<TEntity, IEnumerable<TItem>> Remove<TEntity, TItem>(this IWritable<TEntity> writable, Expression<Func<TEntity, IEnumerable<TItem>?>> navigationPropertyPath)
         where TEntity : class
     {
-        throw new NotImplementedException();
+        var enumerableProperty = navigationPropertyPath.Compile().Invoke(writable.Entity);
+        if (enumerableProperty != null)
+        {
+            foreach (var item in enumerableProperty)
+            {
+                if (item != null)
+                    writable.Context.Remove(item);
+            }
+        }
+
+        return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, enumerableProperty);
     }
 
     public static INestedUpdatingWritable<TEntity, TProperty> Ignore<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
