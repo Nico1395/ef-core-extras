@@ -1,6 +1,6 @@
 ﻿using EfCoreExtras.Keys;
 using EfCoreExtras.Writes.Abstractions;
-using EfCoreExtras.Writes.Internal;
+using EfCoreExtras.Writes.Abstractions.Internal.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 namespace EfCoreExtras.Writes;

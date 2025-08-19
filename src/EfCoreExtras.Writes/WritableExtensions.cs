@@ -1,7 +1,6 @@
-﻿using EfCoreExtras.Keys;
-using EfCoreExtras.Writes.Abstractions;
+﻿using EfCoreExtras.Writes.Abstractions;
+using EfCoreExtras.Writes.Abstractions.Internal.Implementations;
 using EfCoreExtras.Writes.Internal;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace EfCoreExtras.Writes;
@@ -12,9 +11,8 @@ public static class WritableExtensions
         where TEntity : class
     {
         var propertyEntity = navigationPropertyPath.Compile().Invoke(writable.Entity);
-        if (propertyEntity != null)
-            writable.Context.Add(propertyEntity);
 
+        InternalAddHandler.HandleAdding(writable, propertyEntity);
         return new NestedWritable<TEntity, TProperty>(writable, propertyEntity);
     }
 
@@ -22,15 +20,8 @@ public static class WritableExtensions
         where TEntity : class
     {
         var enumerableProperty = navigationPropertyPath.Compile().Invoke(writable.Entity);
-        if (enumerableProperty != null)
-        {
-            foreach (var item in enumerableProperty)
-            {
-                if (item != null)
-                    writable.Context.Add(item);
-            }
-        }
 
+        InternalAddHandler.HandleAdding(writable, enumerableProperty);
         return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, enumerableProperty);
     }
 
@@ -41,23 +32,7 @@ public static class WritableExtensions
         var updatedPropertyEntity = navigationFunc.Invoke(writable.Entity);
         var originalPropertyEntity = writable.Original != null ? navigationFunc.Invoke(writable.Original) : default;
 
-        if (writable.Original == null)
-        {
-            // If the original child is null but the updated one isnt, we add the updated one
-            if (updatedPropertyEntity != null)
-                writable.Context.Add(updatedPropertyEntity);
-        }
-        else
-        {
-            if (originalPropertyEntity != null)
-            {
-                if (updatedPropertyEntity != null)
-                    writable.Context.Entry(originalPropertyEntity).CurrentValues.SetValues(updatedPropertyEntity);      // If both original and updated children are present, we simply update the values
-                else
-                    writable.Context.Remove(originalPropertyEntity);                                                    // If the original child is present but the updated one isnt, we remove the original
-            }
-        }
-
+        InternalUpdateHandler.HandleUpdating(writable, originalPropertyEntity, updatedPropertyEntity);
         return new NestedWritable<TEntity, TProperty>(writable, originalPropertyEntity, updatedPropertyEntity);
     }
 
@@ -68,56 +43,7 @@ public static class WritableExtensions
         var updatedCollection = collectionFunc.Invoke(writable.Entity);
         var originalCollection = writable.Original != null ? collectionFunc.Invoke(writable.Original) : null;
 
-        if (updatedCollection != null && originalCollection == null)   // The original collection is null so flag all 
-        {
-            foreach (var item in updatedCollection)
-            {
-                if (item != null)
-                    writable.Context.Add(item);
-            }
-
-            return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, null, updatedCollection);
-        }
-        else if (updatedCollection == null && originalCollection != null)
-        {
-            foreach (var item in  originalCollection)
-            {
-                if (item != null)
-                    writable.Context.Remove(item);
-            }
-
-            return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, originalCollection, null);
-        }
-        else if (updatedCollection != null && originalCollection != null)
-        {
-            var encounteredOriginalItems = new List<TItem>();         // Collection of original items that were encountered. Original items that were not encountered should be deleted
-            foreach (var updatedItem in updatedCollection)
-            {
-                if (updatedItem == null)
-                    continue;
-
-                var originalItem = originalCollection.SingleOrDefault(a => a != null && writable.Context.KeyValuesEqual(a, updatedItem));
-                if (originalItem == null)
-                {
-                    writable.Context.Add(updatedItem);
-                }
-                else
-                {
-                    writable.Context.Entry(originalItem).CurrentValues.SetValues(updatedItem);
-                    encounteredOriginalItems.Add(originalItem);
-                }
-            }
-
-            foreach (var missingItem in originalCollection.Except(encounteredOriginalItems))
-            {
-                if (missingItem != null)
-                    writable.Context.Remove(missingItem);
-            }
-
-            return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, originalCollection, updatedCollection);
-        }
-
-        // Both collections have to be null at this point
+        InternalUpdateHandler.HandleUpdating(writable, originalCollection, updatedCollection);
         return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, null, null);
     }
 
@@ -125,9 +51,8 @@ public static class WritableExtensions
         where TEntity : class
     {
         var propertyEntity = navigationPropertyPath.Compile().Invoke(writable.Entity);
-        if (propertyEntity != null)
-            writable.Context.Remove(propertyEntity);
 
+        InternalRemoveHandler.HandleRemoving(writable, propertyEntity);
         return new NestedWritable<TEntity, TProperty>(writable, propertyEntity);
     }
 
@@ -135,15 +60,8 @@ public static class WritableExtensions
         where TEntity : class
     {
         var enumerableProperty = navigationPropertyPath.Compile().Invoke(writable.Entity);
-        if (enumerableProperty != null)
-        {
-            foreach (var item in enumerableProperty)
-            {
-                if (item != null)
-                    writable.Context.Remove(item);
-            }
-        }
 
+        InternalRemoveHandler.HandleRemoving(writable, enumerableProperty);
         return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, enumerableProperty);
     }
 
@@ -151,9 +69,8 @@ public static class WritableExtensions
         where TEntity : class
     {
         var propertyEntity = navigationPropertyPath.Compile().Invoke(writable.Entity);
-        if (propertyEntity != null)
-            writable.Context.Entry(propertyEntity).State = EntityState.Unchanged;
 
+        InternalIgnoreHandler.HandleIgnoring(writable, propertyEntity);
         return new NestedWritable<TEntity, TProperty>(writable, propertyEntity);
     }
 
@@ -161,15 +78,8 @@ public static class WritableExtensions
         where TEntity : class
     {
         var enumerableProperty = navigationPropertyPath.Compile().Invoke(writable.Entity);
-        if (enumerableProperty != null)
-        {
-            foreach (var item in enumerableProperty)
-            {
-                if (item != null)
-                    writable.Context.Entry(item).State = EntityState.Unchanged;
-            }
-        }
 
+        InternalIgnoreHandler.HandleIgnoring(writable, enumerableProperty);
         return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, enumerableProperty);
     }
 
