@@ -1,7 +1,6 @@
-﻿using EfCoreExtras.Writes.Abstractions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace EfCoreExtras.Writes.Internal;
+namespace EfCoreExtras.Writes.Abstractions.Internal.Implementations;
 
 internal sealed class Writable<TEntity> : IWritable<TEntity>, IAddingWritable<TEntity>, IUpdatingWritable<TEntity>, IRemovingWritable<TEntity>, IIgnoringWritable<TEntity>
 {
