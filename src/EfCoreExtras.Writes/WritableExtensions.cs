@@ -8,7 +8,7 @@ namespace EfCoreExtras.Writes;
 
 public static class WritableExtensions
 {
-    public static INestedUpdatingWritable<TEntity, TProperty> Add<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
+    public static INestedAddingWritable<TEntity, TProperty> Add<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
         where TEntity : class
     {
         var propertyEntity = navigationPropertyPath.Compile().Invoke(writable.Entity);
@@ -34,7 +34,7 @@ public static class WritableExtensions
         return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, enumerableProperty);
     }
 
-    public static INestedUpdatingWritable<TEntity, TProperty> Update<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
+    public static INestedAddingWritable<TEntity, TProperty> Update<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
         where TEntity : class
     {
         var navigationFunc = navigationPropertyPath.Compile();
@@ -121,7 +121,7 @@ public static class WritableExtensions
         return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, null, null);
     }
 
-    public static INestedUpdatingWritable<TEntity, TProperty> Remove<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
+    public static INestedRemovingWritable<TEntity, TProperty> Remove<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
         where TEntity : class
     {
         var propertyEntity = navigationPropertyPath.Compile().Invoke(writable.Entity);
@@ -131,7 +131,7 @@ public static class WritableExtensions
         return new NestedWritable<TEntity, TProperty>(writable, propertyEntity);
     }
 
-    public static INestedUpdatingWritable<TEntity, IEnumerable<TItem>> Remove<TEntity, TItem>(this IWritable<TEntity> writable, Expression<Func<TEntity, IEnumerable<TItem>?>> navigationPropertyPath)
+    public static INestedRemovingWritable<TEntity, IEnumerable<TItem>> Remove<TEntity, TItem>(this IWritable<TEntity> writable, Expression<Func<TEntity, IEnumerable<TItem>?>> navigationPropertyPath)
         where TEntity : class
     {
         var enumerableProperty = navigationPropertyPath.Compile().Invoke(writable.Entity);
@@ -147,7 +147,7 @@ public static class WritableExtensions
         return new NestedWritable<TEntity, IEnumerable<TItem>>(writable, enumerableProperty);
     }
 
-    public static INestedUpdatingWritable<TEntity, TProperty> Ignore<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
+    public static INestedIgnoringWritable<TEntity, TProperty> Ignore<TEntity, TProperty>(this IWritable<TEntity> writable, Expression<Func<TEntity, TProperty?>> navigationPropertyPath)
         where TEntity : class
     {
         var propertyEntity = navigationPropertyPath.Compile().Invoke(writable.Entity);
@@ -157,7 +157,7 @@ public static class WritableExtensions
         return new NestedWritable<TEntity, TProperty>(writable, propertyEntity);
     }
 
-    public static INestedUpdatingWritable<TEntity, IEnumerable<TItem>> Ignore<TEntity, TItem>(this IWritable<TEntity> writable, Expression<Func<TEntity, IEnumerable<TItem>?>> navigationPropertyPath)
+    public static INestedIgnoringWritable<TEntity, IEnumerable<TItem>> Ignore<TEntity, TItem>(this IWritable<TEntity> writable, Expression<Func<TEntity, IEnumerable<TItem>?>> navigationPropertyPath)
         where TEntity : class
     {
         var enumerableProperty = navigationPropertyPath.Compile().Invoke(writable.Entity);
