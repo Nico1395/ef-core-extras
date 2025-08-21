@@ -1,4 +1,4 @@
-﻿using EfCoreExtras.Keys;
+﻿using EfCoreExtras.EntityTypes.Keys;
 using EfCoreExtras.Writes.Abstractions;
 using EfCoreExtras.Writes.Abstractions.Internal.Implementations;
 using Microsoft.EntityFrameworkCore;

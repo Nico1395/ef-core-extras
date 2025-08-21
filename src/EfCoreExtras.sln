@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreExtras.Writes", "EfCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreExtras.Reads", "EfCoreExtras.Reads\EfCoreExtras.Reads.csproj", "{42B46657-342B-4D1F-B1D1-F68BFA06AE51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreExtras.Keys", "EfCoreExtras.Keys\EfCoreExtras.Keys.csproj", "{EFE47957-90E4-4C8C-B1D1-649929AE5530}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreExtras.EntityTypes", "EfCoreExtras.EntityTypes\EfCoreExtras.EntityTypes.csproj", "{EFE47957-90E4-4C8C-B1D1-649929AE5530}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreExtras.Writes.Tests", "EfCoreExtras.Writes.Tests\EfCoreExtras.Writes.Tests.csproj", "{B31D6EB5-296F-4044-9839-8791816EEDCB}"
 EndProject

@@ -1,4 +1,4 @@
-﻿using EfCoreExtras.Keys;
+﻿using EfCoreExtras.EntityTypes.Keys;
 using EfCoreExtras.Writes.Abstractions;
 using System.Collections;
 
