@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EfCoreExtras.EntityTypes.Keys;
+using Microsoft.EntityFrameworkCore;
 
-namespace EfCoreExtras.Keys.Abstractions;
+namespace EfCoreExtras.EntityTypes.Keys.Abstractions;
 
 /// <summary>
 /// Base class providing a full implementation for the <see cref="IEntityKeyFactory"/> and <see cref="IEntityKeyFactory{TContext}"/> interfaces.

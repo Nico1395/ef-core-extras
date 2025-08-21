@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EfCoreExtras.EntityTypes.Keys;
+using Microsoft.EntityFrameworkCore;
 
-namespace EfCoreExtras.Keys.Abstractions;
+namespace EfCoreExtras.EntityTypes.Keys.Abstractions;
 
 public interface IEntityKeyFactory
 {

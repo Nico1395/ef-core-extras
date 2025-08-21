@@ -1,4 +1,6 @@
-﻿namespace EfCoreExtras.Keys.Abstractions;
+﻿using EfCoreExtras.EntityTypes.Keys;
+
+namespace EfCoreExtras.EntityTypes.Keys.Abstractions;
 
 public static class EntityKeyFactoryExtensions
 {
