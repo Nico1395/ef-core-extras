@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace EfCoreExtras.Keys;
+namespace EfCoreExtras.EntityTypes.Keys;
 
 /// <summary>
 /// Provides extension methods for managing entity states in a <see cref="DbContext"/>.
