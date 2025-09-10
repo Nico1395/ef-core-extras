@@ -1,13 +1,7 @@
-﻿using System.Collections.Concurrent;
-
-namespace EfCoreExtras.EntityTypes.TypeChecks;
-
-internal sealed record EntityTypeModelResult(Type EntityType, bool IsConfigured);
+﻿namespace EfCoreExtras.EntityTypes.TypeChecks;
 
 public static class EntityTypeValidator
 {
-    internal readonly static ConcurrentDictionary<Type, EntityTypeModelResult> _entityTypeResultCache = [];
-
     /// <summary>
     /// Determines whether the specified type is a child entity type.
     /// </summary>

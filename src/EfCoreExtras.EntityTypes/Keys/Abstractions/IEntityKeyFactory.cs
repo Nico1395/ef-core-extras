@@ -1,5 +1,4 @@
-﻿using EfCoreExtras.EntityTypes.Keys;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace EfCoreExtras.EntityTypes.Keys.Abstractions;
 
